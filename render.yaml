@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: cv-optimizer
+    runtime: python
+    plan: free
+    buildCommand: |
+      pip install -r requirements.txt
+      python manage.py collectstatic --noinput
+      python manage.py migrate
+    startCommand: gunicorn config.wsgi:application
+
+    # NOTE: Render's free plan uses ephemeral storage.
+    # SQLite data (db.sqlite3) will be reset on every deploy.
+    # Upgrade to a paid plan and add a Render Postgres database
+    # when persistent storage is needed.
+
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true        # Render auto-generates a secure value
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: ".onrender.com"
+      - key: GROQ_API_KEY
+        sync: false                # Set manually in the Render dashboard
+      - key: PYTHON_VERSION
+        value: "3.12.0"
