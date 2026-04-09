@@ -1,0 +1,55 @@
+{% extends "optimizer/base.html" %}
+
+{% block title %}Analysis History — CV Optimizer{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <h1>Analysis History</h1>
+  <a href="{% url 'home' %}" class="btn-primary">New Analysis</a>
+</section>
+
+{% if analyses %}
+  <div class="history-table-wrapper">
+    <table class="history-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Score</th>
+          <th>Missing Keywords</th>
+          <th>Date</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for analysis in analyses %}
+        <tr>
+          <td>{{ analysis.pk }}</td>
+          <td>
+            <span class="score-badge {% if analysis.match_score >= 70 %}score-high{% elif analysis.match_score >= 40 %}score-mid{% else %}score-low{% endif %}">
+              {{ analysis.match_score }}/100
+            </span>
+          </td>
+          <td class="keywords-preview">
+            {% for kw in analysis.missing_keywords|slice:":4" %}
+              <span class="keyword-tag">{{ kw }}</span>
+            {% empty %}
+              <span class="empty-state">None</span>
+            {% endfor %}
+            {% if analysis.missing_keywords|length > 4 %}
+              <span class="more-badge">+{{ analysis.missing_keywords|length|add:"-4" }} more</span>
+            {% endif %}
+          </td>
+          <td>{{ analysis.created_at|date:"m/d/Y H:i" }}</td>
+          <td><a href="{% url 'detail' analysis.pk %}" class="btn-secondary btn-sm">View Details</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <div class="empty-history">
+    <p>No analyses saved yet.</p>
+    <a href="{% url 'home' %}" class="btn-primary">Run Your First Analysis</a>
+  </div>
+{% endif %}
+{% endblock %}

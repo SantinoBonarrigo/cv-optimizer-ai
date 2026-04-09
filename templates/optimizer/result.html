@@ -1,0 +1,62 @@
+{% extends "optimizer/base.html" %}
+
+{% block title %}Analysis Result — CV Optimizer{% endblock %}
+
+{% block content %}
+<section class="result-header">
+  <h1>Analysis Result</h1>
+  {% if from_history %}
+    <a href="{% url 'history' %}" class="btn-secondary">Back to History</a>
+  {% else %}
+    <a href="{% url 'home' %}" class="btn-secondary">Analyze Another CV</a>
+  {% endif %}
+</section>
+
+<div class="result-grid">
+
+  <!-- Score -->
+  <div class="card score-card">
+    <h2>Compatibility Score</h2>
+    <div class="score-circle {% if analysis.match_score >= 70 %}score-high{% elif analysis.match_score >= 40 %}score-mid{% else %}score-low{% endif %}">
+      {{ analysis.match_score }}<span>/100</span>
+    </div>
+    <p class="score-label">
+      {% if analysis.match_score >= 70 %}Excellent match
+      {% elif analysis.match_score >= 40 %}Moderate match
+      {% else %}Low match
+      {% endif %}
+    </p>
+  </div>
+
+  <!-- Missing Keywords -->
+  <div class="card">
+    <h2>Missing Keywords</h2>
+    {% if analysis.missing_keywords %}
+      <ul class="keyword-list">
+        {% for keyword in analysis.missing_keywords %}
+          <li class="keyword-tag">{{ keyword }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="empty-state">Your CV already includes all the main keywords.</p>
+    {% endif %}
+  </div>
+
+  <!-- Suggestions -->
+  <div class="card suggestions-card">
+    <h2>Improvement Suggestions</h2>
+    {% if analysis.suggestions %}
+      <ol class="suggestion-list">
+        {% for suggestion in analysis.suggestions %}
+          <li>{{ suggestion }}</li>
+        {% endfor %}
+      </ol>
+    {% else %}
+      <p class="empty-state">No additional suggestions.</p>
+    {% endif %}
+  </div>
+
+</div>
+
+<p class="analysis-date">Analysis performed on {{ analysis.created_at|date:"m/d/Y" }} at {{ analysis.created_at|time:"H:i" }}</p>
+{% endblock %}
