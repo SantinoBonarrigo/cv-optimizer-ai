@@ -2,3 +2,4 @@ Django==6.0.4
 groq==1.1.2
 psycopg2-binary==2.9.11
 python-dotenv==1.2.2
+pypdf==6.9.2

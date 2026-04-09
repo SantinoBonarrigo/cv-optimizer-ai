@@ -87,6 +87,45 @@ nav a:hover { color: var(--text); }
 
 .form-actions { margin-top: 1.5rem; text-align: center; }
 
+/* PDF upload */
+.upload-or {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  color: var(--muted);
+  font-size: .8rem;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  margin: .5rem 0;
+}
+.upload-or::before,
+.upload-or::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.pdf-upload-label {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .75rem 1rem;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  color: var(--muted);
+  font-size: .875rem;
+  cursor: pointer;
+  transition: border-color .2s, color .2s;
+  font-weight: normal;
+  text-transform: none;
+  letter-spacing: normal;
+}
+.pdf-upload-label:hover { border-color: var(--accent); color: var(--text); }
+.pdf-upload-label svg { flex-shrink: 0; }
+
+.form-file-input { display: none; }
+
 /* Buttons */
 .btn-primary {
   background: var(--accent);
@@ -196,3 +235,79 @@ nav a:hover { color: var(--text); }
 
 .empty-history { text-align: center; padding: 4rem 0; color: var(--muted); }
 .empty-history p { margin-bottom: 1.5rem; font-size: 1.1rem; }
+
+/* ── Recruiter decision layout ───────────────────────────────────── */
+.result-top-grid {
+  display: grid;
+  grid-template-columns: 220px 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+@media (max-width: 768px) { .result-top-grid { grid-template-columns: 1fr; } }
+
+.result-mid-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+@media (max-width: 768px) { .result-mid-grid { grid-template-columns: 1fr; } }
+
+/* Job Fit badge */
+.decision-card { display: flex; flex-direction: column; gap: .75rem; }
+.fit-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .45rem 1rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: .95rem;
+  border: 2px solid;
+  width: fit-content;
+}
+.fit-strong  { border-color: var(--green);  color: var(--green); }
+.fit-moderate{ border-color: var(--yellow); color: var(--yellow); }
+.fit-weak    { border-color: var(--red);    color: var(--red); }
+.decision-hint { color: var(--muted); font-size: .85rem; }
+
+/* Application Recommendation */
+.recommendation-card { display: flex; flex-direction: column; gap: .75rem; border-left: 4px solid var(--border); }
+.rec-apply   { border-left-color: var(--green); }
+.rec-improve { border-left-color: var(--yellow); }
+.rec-no      { border-left-color: var(--red); }
+.rec-label   { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: .5rem; }
+
+/* Explanation */
+.explanation-card { margin-bottom: 1.5rem; }
+.explanation-card p { color: var(--text); line-height: 1.7; }
+
+/* ATS */
+.ats-card { display: flex; flex-direction: column; gap: .75rem; }
+.ats-badge {
+  display: inline-block;
+  padding: .35rem .9rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: .875rem;
+  width: fit-content;
+}
+.ats-ok   { background: #14532d; color: #86efac; border: 1px solid #22c55e; }
+.ats-fail { background: #7f1d1d; color: #fca5a5; border: 1px solid #ef4444; }
+.ats-subtitle { font-size: .8rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-top: .25rem; }
+.ats-list { padding-left: 1.1rem; display: flex; flex-direction: column; gap: .4rem; }
+.ats-issues-list li { color: #fca5a5; font-size: .875rem; }
+.ats-tips-list li   { color: var(--text); font-size: .875rem; }
+
+/* Full-width suggestions row */
+.suggestions-card-full {
+  margin-bottom: 1.5rem;
+}
+.suggestions-card-full h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  margin-bottom: 1rem;
+}

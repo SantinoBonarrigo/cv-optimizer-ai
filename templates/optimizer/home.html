@@ -8,8 +8,14 @@
   <p>Paste the job offer and your CV. The AI will give you a compatibility score, the keywords you are missing, and concrete improvement suggestions.</p>
 </section>
 
-<form method="post" class="analysis-form">
+<form method="post" enctype="multipart/form-data" class="analysis-form">
   {% csrf_token %}
+
+  {% if form.non_field_errors %}
+    {% for error in form.non_field_errors %}
+      <div class="alert">{{ error }}</div>
+    {% endfor %}
+  {% endif %}
 
   <div class="form-grid">
     <div class="form-group">
@@ -26,6 +32,17 @@
       {% if form.cv_text.errors %}
         <span class="field-error">{{ form.cv_text.errors.0 }}</span>
       {% endif %}
+
+      <div class="upload-or"><span>or</span></div>
+
+      <label class="pdf-upload-label" for="{{ form.cv_pdf.id_for_label }}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+        <span id="pdf-label-text">Upload PDF (max 5 MB)</span>
+      </label>
+      {{ form.cv_pdf }}
+      {% if form.cv_pdf.errors %}
+        <span class="field-error">{{ form.cv_pdf.errors.0 }}</span>
+      {% endif %}
     </div>
   </div>
 
@@ -33,4 +50,11 @@
     <button type="submit" class="btn-primary">Analyze CV</button>
   </div>
 </form>
+
+<script>
+  document.getElementById('cv_pdf').addEventListener('change', function () {
+    const label = document.getElementById('pdf-label-text');
+    label.textContent = this.files.length ? this.files[0].name : 'Upload PDF (max 5 MB)';
+  });
+</script>
 {% endblock %}

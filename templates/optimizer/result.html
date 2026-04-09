@@ -12,7 +12,8 @@
   {% endif %}
 </section>
 
-<div class="result-grid">
+<!-- Row 1: Score + Decision -->
+<div class="result-top-grid">
 
   <!-- Score -->
   <div class="card score-card">
@@ -28,6 +29,47 @@
     </p>
   </div>
 
+  <!-- Job Fit Decision -->
+  {% if analysis.job_fit %}
+  <div class="card decision-card">
+    <h2>Job Fit Decision</h2>
+    <span class="fit-badge {% if analysis.job_fit == 'Strong Match' %}fit-strong{% elif analysis.job_fit == 'Moderate Match' %}fit-moderate{% else %}fit-weak{% endif %}">
+      {% if analysis.job_fit == 'Strong Match' %}✓{% elif analysis.job_fit == 'Moderate Match' %}~{% else %}✗{% endif %}
+      {{ analysis.job_fit }}
+    </span>
+    <p class="decision-hint">
+      {% if analysis.job_fit == 'Strong Match' %}Your profile aligns well with the core requirements.
+      {% elif analysis.job_fit == 'Moderate Match' %}Your profile partially meets the requirements.
+      {% else %}Your profile does not yet meet most of the requirements.
+      {% endif %}
+    </p>
+  </div>
+  {% endif %}
+
+  <!-- Application Recommendation -->
+  {% if analysis.recommendation %}
+  <div class="card recommendation-card {% if analysis.recommendation == 'Apply' %}rec-apply{% elif analysis.recommendation == 'Apply with improvements' %}rec-improve{% else %}rec-no{% endif %}">
+    <h2>Application Recommendation</h2>
+    <p class="rec-label">
+      {% if analysis.recommendation == 'Apply' %}🟢{% elif analysis.recommendation == 'Apply with improvements' %}🟡{% else %}🔴{% endif %}
+      {{ analysis.recommendation }}
+    </p>
+  </div>
+  {% endif %}
+
+</div>
+
+<!-- Row 2: Explanation -->
+{% if analysis.explanation %}
+<div class="card explanation-card">
+  <h2>Why this result?</h2>
+  <p>{{ analysis.explanation }}</p>
+</div>
+{% endif %}
+
+<!-- Row 3: Keywords + ATS -->
+<div class="result-mid-grid">
+
   <!-- Missing Keywords -->
   <div class="card">
     <h2>Missing Keywords</h2>
@@ -42,20 +84,48 @@
     {% endif %}
   </div>
 
-  <!-- Suggestions -->
-  <div class="card suggestions-card">
-    <h2>Improvement Suggestions</h2>
-    {% if analysis.suggestions %}
-      <ol class="suggestion-list">
-        {% for suggestion in analysis.suggestions %}
-          <li>{{ suggestion }}</li>
-        {% endfor %}
-      </ol>
+  <!-- ATS Compatibility -->
+  <div class="card ats-card">
+    <h2>ATS Compatibility</h2>
+    {% if analysis.ats_friendly is not None %}
+      <span class="ats-badge {% if analysis.ats_friendly %}ats-ok{% else %}ats-fail{% endif %}">
+        {% if analysis.ats_friendly %}ATS-Friendly{% else %}Not ATS-Friendly{% endif %}
+      </span>
+      {% if not analysis.ats_friendly and analysis.ats_issues %}
+        <p class="ats-subtitle">Issues detected:</p>
+        <ul class="ats-list ats-issues-list">
+          {% for issue in analysis.ats_issues %}
+            <li>{{ issue }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+      {% if analysis.ats_tips %}
+        <p class="ats-subtitle">How to fix it:</p>
+        <ul class="ats-list ats-tips-list">
+          {% for tip in analysis.ats_tips %}
+            <li>{{ tip }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
     {% else %}
-      <p class="empty-state">No additional suggestions.</p>
+      <p class="empty-state">ATS data not available for this analysis.</p>
     {% endif %}
   </div>
 
+</div>
+
+<!-- Row 4: Suggestions -->
+<div class="card suggestions-card-full">
+  <h2>Improvement Suggestions</h2>
+  {% if analysis.suggestions %}
+    <ol class="suggestion-list">
+      {% for suggestion in analysis.suggestions %}
+        <li>{{ suggestion }}</li>
+      {% endfor %}
+    </ol>
+  {% else %}
+    <p class="empty-state">No additional suggestions.</p>
+  {% endif %}
 </div>
 
 <p class="analysis-date">Analysis performed on {{ analysis.created_at|date:"m/d/Y" }} at {{ analysis.created_at|time:"H:i" }}</p>
